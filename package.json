@@ -1,0 +1,12 @@
+{
+  "name": "dexpense-app",
+  "version": "1.0.0",
+  "description": "Dexpense — Personal Daily & Monthly Expense Manager based on Excel ledger",
+  "scripts": {
+    "start": "npx serve . -l 5050 -n",
+    "dev": "npx serve . -l 5050 -n",
+    "test": "node test-engine.js"
+  },
+  "keywords": ["expense-manager", "personal-finance", "budget-tracker", "fintech"],
+  "author": "ZeroBytech"
+}

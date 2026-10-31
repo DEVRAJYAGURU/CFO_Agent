@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dexpense CFO — Intelligent Personal Finance & Wealth Platform</title>
+  <meta name="description" content="CFO-grade personal financial planning, cash-flow forecasting, liquidity control, budgeting, and wealth platform for Indian households.">
+
+  <!-- Google Fonts: Inter / Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome Icons 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Application Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- CFO SIDEBAR NAVIGATION -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="app-brand">
+          <div class="brand-icon">
+            <i class="fa-solid fa-chart-line-up"></i>
+          </div>
+          <div class="brand-text">
+            <div class="brand-title-row">
+              <span class="brand-title">Dexpense</span>
+              <span class="brand-badge-cfo">CFO PRO</span>
+            </div>
+            <span class="brand-subtitle">Financial Intelligence Platform</span>
+          </div>
+        </div>
+        <button class="mobile-toggle-btn" id="sidebarCloseBtn" aria-label="Close Sidebar">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Quick Financial Health Indicator -->
+      <div class="sidebar-health-card">
+        <div class="health-header">
+          <span class="health-label"><i class="fa-solid fa-heart-pulse"></i> Financial Health</span>
+          <span class="health-score" id="sidebarHealthScore">100/100</span>
+        </div>
+        <div class="health-progress-track">
+          <div class="health-progress-bar" id="sidebarHealthBar" style="width: 100%;"></div>
+        </div>
+        <div class="health-meta">
+          <span id="sidebarHealthStatus">Clean Slate Ready</span>
+        </div>
+      </div>
+
+      <!-- Sidebar Navigation Menu -->
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">COMMAND & CONTROL</div>
+        <button class="nav-item active" data-view="dashboard-view" id="navDashboard">
+          <i class="fa-solid fa-compass"></i>
+          <span>Daily Financial Position</span>
+          <span class="badge badge-accent">Live</span>
+        </button>
+        <button class="nav-item" data-view="ledger-view" id="navLedger">
+          <i class="fa-solid fa-receipt"></i>
+          <span>Transaction Ledger & Audit</span>
+        </button>
+        <button class="nav-item" data-view="forecast-view" id="navForecast">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          <span>Cash-Flow Forecast (30D)</span>
+        </button>
+
+        <div class="nav-section-title">PLANNING & CONTROL</div>
+        <button class="nav-item" data-view="budget-view" id="navBudget">
+          <i class="fa-solid fa-scale-balanced"></i>
+          <span>Budget & Variance Analysis</span>
+        </button>
+        <button class="nav-item" data-view="obligations-view" id="navObligations">
+          <i class="fa-solid fa-calendar-days"></i>
+          <span>Upcoming Obligations & EMIs</span>
+        </button>
+        <button class="nav-item" data-view="wealth-view" id="navWealth">
+          <i class="fa-solid fa-piggy-bank"></i>
+          <span>2026 Wealth & Savings Portfolio</span>
+        </button>
+
+        <div class="nav-section-title">FINANCIAL REPORTING</div>
+        <button class="nav-item" data-view="statements-view" id="navStatements">
+          <i class="fa-solid fa-file-invoice-dollar"></i>
+          <span>Accounting Statements (P&L, CF)</span>
+        </button>
+        <button class="nav-item" data-view="risk-view" id="navRisk">
+          <i class="fa-solid fa-shield-halved"></i>
+          <span>Risk & Runway Diagnostics</span>
+        </button>
+      </nav>
+
+      <!-- Sidebar Account Balances Snapshot -->
+      <div class="sidebar-accounts-box">
+        <div class="accounts-header">
+          <span><i class="fa-solid fa-building-columns"></i> Verified Accounts</span>
+          <button class="btn-micro" id="btnManageAccounts" title="Manage Accounts & Balances"><i class="fa-solid fa-gear"></i></button>
+        </div>
+        <div class="accounts-mini-list" id="sidebarAccountsList">
+          <!-- Dynamically populated accounts -->
+        </div>
+      </div>
+
+      <!-- Sidebar Footer -->
+      <div class="sidebar-footer">
+        <div class="theme-toggle" id="themeToggleBtn" role="button" tabindex="0" title="Toggle Light / Dark Mode">
+          <i class="fa-solid fa-moon theme-icon-dark"></i>
+          <i class="fa-solid fa-sun theme-icon-light"></i>
+          <span id="themeLabel">Dark Theme</span>
+        </div>
+        <div class="sidebar-action-row" style="grid-template-columns: 1fr 1fr; margin-bottom: 6px;">
+          <button class="btn-sidebar-secondary" id="btnExportAllData" title="Export Full Accounting Package to JSON Backup">
+            <i class="fa-solid fa-download"></i> Export
+          </button>
+          <button class="btn-sidebar-secondary" id="btnImportData" title="Restore Accounting Package from JSON Backup">
+            <i class="fa-solid fa-upload"></i> Import
+          </button>
+        </div>
+        <div class="sidebar-action-row" style="grid-template-columns: 1fr 1fr;">
+          <button class="btn-sidebar-secondary text-danger" id="btnClearAllData" title="Wipe All Data to Fresh Clean Slate">
+            <i class="fa-solid fa-trash-can"></i> Clean All
+          </button>
+          <button class="btn-sidebar-secondary" id="btnResetData" title="Load Excel Baseline Demo Data">
+            <i class="fa-solid fa-folder-open"></i> Demo Data
+          </button>
+        </div>
+        <input type="file" id="importFileInput" accept=".json" class="hidden">
+      </div>
+    </aside>
+
+    <!-- MAIN EXECUTIVE WORKSPACE -->
+    <main class="main-content">
+      <!-- TOP COMMAND BAR -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-toggle-btn" id="sidebarOpenBtn" aria-label="Open Sidebar">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div class="page-title-group">
+            <div class="title-with-pill">
+              <h1 class="page-title" id="pageHeading">Daily Financial Position</h1>
+              <span class="status-pill status-verified" id="topbarVerifiedPill">
+                <i class="fa-solid fa-circle-check"></i> Balances Reconciled
+              </span>
+            </div>
+            <p class="page-desc" id="pageSubHeading">Real-time liquidity, daily spending runway, and committed obligations</p>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <!-- Planning Period / Payday Selector -->
+          <div class="cfo-period-card">
+            <div class="period-icon"><i class="fa-regular fa-clock"></i></div>
+            <div class="period-info">
+              <span class="period-label">Next Expected Salary:</span>
+              <span class="period-val mono" id="topbarPaydayText">30 Oct (7 Days Left)</span>
+            </div>
+            <button class="btn-icon-subtle" id="btnEditPayday" title="Configure Payday Schedule">
+              <i class="fa-solid fa-pencil"></i>
+            </button>
+          </div>
+
+          <!-- Master Action: Log Transaction -->
+          <button class="btn btn-primary btn-glow" id="btnQuickRecord">
+            <i class="fa-solid fa-plus"></i>
+            <span>Record Transaction</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- ====================================================================
+           VIEW 1: DAILY FINANCIAL POSITION (THE EXECUTIVE DASHBOARD)
+           Answers the 6 core CFO questions immediately
+           ==================================================================== -->
+      <section class="app-view active" id="dashboard-view">
+        <!-- 1. HERO BANNER: SAFE-TO-SPEND TODAY (The Crown Jewel CFO Metric) -->
+        <div class="card safe-spend-hero">
+          <div class="safe-spend-grid">
+            <div class="safe-spend-main">
+              <div class="safe-badge-row">
+                <span class="badge-safe-spend"><i class="fa-solid fa-shield-check"></i> SMART DAILY LIMIT</span>
+                <span class="safe-confidence-tag" title="Calculated based on confirmed liquid funds, remaining essential bills, emergency buffer, and days until salary">
+                  <i class="fa-solid fa-circle-info"></i> High Confidence (Audit Verified)
+                </span>
+              </div>
+              <div class="safe-spend-amount-row">
+                <div class="safe-amount-wrap">
+                  <span class="currency-symbol">₹</span>
+                  <span class="safe-amount-val mono" id="heroSafeToSpendToday">520</span>
+                </div>
+                <div class="safe-spend-context">
+                  <span class="safe-spend-title">Safe-to-Spend Today</span>
+                  <span class="safe-spend-subtitle" id="heroSafeSpendSubtitle">Flexible spending allowance without compromising bills or emergency savings</span>
+                </div>
+              </div>
+
+              <!-- Mathematical Transparency Formula Bar -->
+              <div class="safe-formula-strip">
+                <div class="formula-item">
+                  <span class="formula-lbl">Liquid Cash</span>
+                  <strong class="mono" id="formLiquidCash">₹0</strong>
+                </div>
+                <span class="formula-op">−</span>
+                <div class="formula-item">
+                  <span class="formula-lbl">Committed Obligations</span>
+                  <strong class="mono text-warning" id="formCommittedBills">₹0</strong>
+                </div>
+                <span class="formula-op">−</span>
+                <div class="formula-item">
+                  <span class="formula-lbl">Emergency Reserve</span>
+                  <strong class="mono text-cyan" id="formEmergencyBuffer">₹0</strong>
+                </div>
+                <span class="formula-op">=</span>
+                <div class="formula-item highlight">
+                  <span class="formula-lbl">Flexible Budget</span>
+                  <strong class="mono text-success" id="formFlexiblePool">₹0</strong>
+                </div>
+                <span class="formula-op">÷</span>
+                <div class="formula-item">
+                  <span class="formula-lbl">Days to Payday</span>
+                  <strong class="mono" id="formDaysLeft">0 Days</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Spent Today vs Daily Limit Gauge -->
+            <div class="safe-spend-gauge-panel">
+              <div class="gauge-header">
+                <span class="gauge-title">Today's Spend Control</span>
+                <span class="gauge-status-badge status-good" id="gaugeStatusText">On Track</span>
+              </div>
+              <div class="gauge-numbers">
+                <div>
+                  <span class="gauge-small-lbl">Spent Today:</span>
+                  <div class="gauge-big-num mono" id="gaugeTodaySpent">₹0</div>
+                </div>
+                <div class="text-right">
+                  <span class="gauge-small-lbl">Remaining Today:</span>
+                  <div class="gauge-big-num mono text-success" id="gaugeTodayRemaining">₹0</div>
+                </div>
+              </div>
+              <div class="gauge-bar-track">
+                <div class="gauge-bar-fill" id="gaugeBarFill" style="width: 0%;"></div>
+              </div>
+              <p class="gauge-footnote" id="gaugeFootnote">No discretionary spending recorded today. Every unspent Rupee rolls over to boost your savings!</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. FOUR CFO LIQUIDITY & RESILIENCE KPI CARDS -->
+        <div class="cfo-kpi-grid">
+          <!-- Card 1: Total Liquid Funds (Confirmed vs Estimated) -->
+          <div class="card kpi-cfo-card">
+            <div class="kpi-cfo-top">
+              <div>
+                <span class="kpi-cfo-label">Total Available Liquidity</span>
+                <span class="kpi-cfo-help">Cash & Bank Accounts Immediately Accessible</span>
+              </div>
+              <div class="kpi-cfo-icon bg-emerald"><i class="fa-solid fa-vault"></i></div>
+            </div>
+            <div class="kpi-cfo-value-row">
+              <span class="kpi-cfo-val mono text-success" id="kpiLiquidBalance">₹0</span>
+            </div>
+            <div class="kpi-cfo-breakdown">
+              <div class="kpi-mini-item">
+                <span>Primary Bank:</span>
+                <strong class="mono" id="kpiPrimaryBankVal">₹0</strong>
+              </div>
+              <div class="kpi-mini-item">
+                <span>SBI Reserve:</span>
+                <strong class="mono" id="kpiSbiVal">₹0</strong>
+              </div>
+              <div class="kpi-mini-item">
+                <span>Cash in Hand:</span>
+                <strong class="mono" id="kpiCashVal">₹0</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2: Encumbered / Reserved for Upcoming Bills -->
+          <div class="card kpi-cfo-card">
+            <div class="kpi-cfo-top">
+              <div>
+                <span class="kpi-cfo-label">Reserved for Obligations</span>
+                <span class="kpi-cfo-help">Pending EMIs, Rent & Fixed Commitments</span>
+              </div>
+              <div class="kpi-cfo-icon bg-amber"><i class="fa-solid fa-lock"></i></div>
+            </div>
+            <div class="kpi-cfo-value-row">
+              <span class="kpi-cfo-val mono text-warning" id="kpiReservedBills">₹0</span>
+            </div>
+            <div class="kpi-cfo-breakdown">
+              <div class="kpi-mini-item">
+                <span>Home EMI + Rent:</span>
+                <strong class="mono" id="kpiEmiRentVal">₹0</strong>
+              </div>
+              <div class="kpi-mini-item">
+                <span>RDs + LIC:</span>
+                <strong class="mono" id="kpiRdsLicVal">₹0</strong>
+              </div>
+              <div class="kpi-mini-item">
+                <span>Credit Cards & Other:</span>
+                <strong class="mono" id="kpiCardsLivingVal">₹0</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3: Free Cash Flow & Monthly Surplus -->
+          <div class="card kpi-cfo-card">
+            <div class="kpi-cfo-top">
+              <div>
+                <span class="kpi-cfo-label">Net Operating Surplus</span>
+                <span class="kpi-cfo-help">Current Month Income vs Total Spend</span>
+              </div>
+              <div class="kpi-cfo-icon bg-indigo"><i class="fa-solid fa-arrow-trend-up"></i></div>
+            </div>
+            <div class="kpi-cfo-value-row">
+              <span class="kpi-cfo-val mono text-primary" id="kpiNetSurplus">₹0</span>
+            </div>
+            <div class="kpi-cfo-breakdown">
+              <div class="kpi-mini-item">
+                <span>Income Inflow:</span>
+                <strong class="mono" id="kpiInflowVal">₹0</strong>
+              </div>
+              <div class="kpi-mini-item">
+                <span>Expenses Incurred:</span>
+                <strong class="mono text-danger" id="kpiOutflowVal">₹0</strong>
+              </div>
+              <div class="kpi-mini-item">
+                <span>Savings Rate:</span>
+                <strong class="mono text-success" id="kpiSavingsRateVal">0.0%</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 4: Emergency Fund Runway (Months of Survival) -->
+          <div class="card kpi-cfo-card">
+            <div class="kpi-cfo-top">
+              <div>
+                <span class="kpi-cfo-label">Emergency Runway</span>
+                <span class="kpi-cfo-help">Survival duration at baseline essentials</span>
+              </div>
+              <div class="kpi-cfo-icon bg-cyan"><i class="fa-solid fa-shield-heart"></i></div>
+            </div>
+            <div class="kpi-cfo-value-row">
+              <span class="kpi-cfo-val mono text-cyan" id="kpiRunwayMonths">0.0 Months</span>
+            </div>
+            <div class="kpi-cfo-breakdown">
+              <div class="kpi-mini-item">
+                <span>Monthly Burn Rate:</span>
+                <strong class="mono" id="kpiMonthlyBurnVal">₹0/mo</strong>
+              </div>
+              <div class="kpi-mini-item">
+                <span>Target Buffer:</span>
+                <strong class="mono">3.0 - 6.0 Mos</strong>
+              </div>
+              <div class="kpi-mini-item">
+                <span>Runway Status:</span>
+                <strong class="mono text-success">Setup Mode</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. DASHBOARD DUAL COLUMN: UPCOMING OBLIGATIONS & QUICK ACTION REGISTER -->
+        <div class="dashboard-two-col">
+          <!-- Upcoming Obligations & Scheduled Commitments -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <h2 class="card-title"><i class="fa-solid fa-calendar-check text-warning"></i> Upcoming Commitments Before Next Payday</h2>
+                <span class="card-subtitle">Encumbered funds reserved to prevent default or penalty</span>
+              </div>
+              <button class="btn btn-outline-sm" id="btnViewAllObligations">View Schedule</button>
+            </div>
+            <div class="table-responsive">
+              <table class="cfo-table">
+                <thead>
+                  <tr>
+                    <th>Due Date</th>
+                    <th>Obligation</th>
+                    <th>Type</th>
+                    <th class="text-right">Amount (₹)</th>
+                    <th>Target Account</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="dashObligationsTableBody">
+                  <!-- Dynamically populated from obligations engine -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- CFO Diagnostics & Advisory Feed -->
+          <div class="card cfo-advisory-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <h3 class="card-title"><i class="fa-solid fa-user-tie text-accent"></i> Senior CA / CFO Insights</h3>
+                <span class="card-subtitle">Automated financial control and risk alerts</span>
+              </div>
+            </div>
+            <div class="advisory-feed" id="cfoAdvisoryFeed">
+              <!-- Dynamically populated CFO insights -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           VIEW 2: TRANSACTION LEDGER & AUDIT TRAIL
+           Accounting precision, reconciliation status, and soft reversals
+           ==================================================================== -->
+      <section class="app-view" id="ledger-view">
+        <!-- Advanced Ledger Toolbar -->
+        <div class="card ledger-filter-bar">
+          <div class="filter-group">
+            <div class="search-box">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="ledgerSearchInput" placeholder="Search description, payee, notes...">
+            </div>
+
+            <div class="select-wrapper">
+              <select id="filterType" aria-label="Filter by Type">
+                <option value="ALL">All Transaction Types</option>
+                <option value="EXPENSE">Expense (P&L Outflow)</option>
+                <option value="INCOME">Income (Inflow)</option>
+                <option value="TRANSFER">Internal Transfer (Balance Sheet)</option>
+                <option value="LIABILITY_SETTLEMENT">Liability Settlement (Credit Card)</option>
+                <option value="SAVINGS_ALLOCATION">Investment / Savings Asset</option>
+              </select>
+            </div>
+
+            <div class="select-wrapper">
+              <select id="filterCategory" aria-label="Filter by Category">
+                <option value="ALL">All Categories</option>
+                <option value="EMI & Rent">Home EMI & Rent</option>
+                <option value="Food & Living">Food & Tiffin</option>
+                <option value="Savings & RD">RD & Savings</option>
+                <option value="Credit Card">Credit Card Payments</option>
+                <option value="Transfers">Transfers & Cash</option>
+                <option value="Investments">Share Market & Equity</option>
+                <option value="Vehicles">Vehicles & Maintenance</option>
+                <option value="Miscellaneous">Miscellaneous</option>
+              </select>
+            </div>
+
+            <div class="select-wrapper">
+              <select id="filterAccount" aria-label="Filter by Account">
+                <option value="ALL">All Accounts</option>
+                <option value="Primary Bank">Primary Salary Account</option>
+                <option value="SBI Account">SBI Reserve Account</option>
+                <option value="Cash">Cash in Hand</option>
+                <option value="Credit Card">Credit Card</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="filter-actions">
+            <button class="btn btn-outline" id="btnExportLedgerCSV">
+              <i class="fa-solid fa-file-excel"></i> Export Ledger CSV
+            </button>
+            <button class="btn btn-primary" id="btnLedgerAddExpense">
+              <i class="fa-solid fa-plus"></i> New Entry
+            </button>
+          </div>
+        </div>
+
+        <!-- Ledger Table -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title" id="ledgerHeaderTitle">October 2026 Audit Ledger</h2>
+              <span class="card-subtitle">Strict double-entry compliant ledger with running available balance and reconciliation flags</span>
+            </div>
+            <div class="ledger-summary-strip">
+              <div class="strip-item">
+                <span>Inflows:</span>
+                <strong class="mono text-success" id="ledgerTotalInflow">₹0</strong>
+              </div>
+              <div class="strip-item">
+                <span>Expenses:</span>
+                <strong class="mono text-danger" id="ledgerTotalExpense">₹0</strong>
+              </div>
+              <div class="strip-item">
+                <span>Transfers:</span>
+                <strong class="mono text-cyan" id="ledgerTotalTransfers">₹0</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="cfo-table" id="mainLedgerTable">
+              <thead>
+                <tr>
+                  <th style="width: 50px;" class="text-center">Sr</th>
+                  <th style="width: 105px;">Date & Time</th>
+                  <th style="width: 120px;">Accounting Type</th>
+                  <th>Description</th>
+                  <th style="width: 130px;">Category</th>
+                  <th style="width: 120px;">Account</th>
+                  <th style="width: 130px;" class="text-right">Debit (₹)</th>
+                  <th style="width: 130px;" class="text-right">Credit (₹)</th>
+                  <th style="width: 140px;" class="text-right">Running Balance</th>
+                  <th style="width: 90px;" class="text-center">Status</th>
+                  <th style="width: 80px;" class="text-center">Audit</th>
+                </tr>
+              </thead>
+              <tbody id="mainLedgerTableBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           VIEW 3: CFO CASH-FLOW FORECASTING (30-DAY ROLLING HORIZON)
+           ==================================================================== -->
+      <section class="app-view" id="forecast-view">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title"><i class="fa-solid fa-chart-area text-accent"></i> Rolling 30-Day Liquidity Forecast</h2>
+              <span class="card-subtitle">Projected daily closing cash balances based on confirmed inflows, scheduled EMIs, and essential burn rate</span>
+            </div>
+            <div class="forecast-meta-pill">
+              <span class="dot dot-green"></span>
+              <span>No projected shortfall before next salary</span>
+            </div>
+          </div>
+
+          <!-- Forecast Simulation Chart Area -->
+          <div class="forecast-visual-container">
+            <div class="forecast-timeline-header">
+              <div class="timeline-stat">
+                <span class="t-label">Current Cash</span>
+                <strong class="t-val mono text-primary" id="fcCurrentCash">₹0</strong>
+              </div>
+              <div class="timeline-stat">
+                <span class="t-label">Scheduled Outflows</span>
+                <strong class="t-val mono text-warning" id="fcScheduledOutflows">₹0</strong>
+              </div>
+              <div class="timeline-stat">
+                <span class="t-label">Lowest Projected Dip</span>
+                <strong class="t-val mono text-success" id="fcLowestDip">₹0</strong>
+              </div>
+              <div class="timeline-stat">
+                <span class="t-label">Next Major Inflow</span>
+                <strong class="t-val mono text-success" id="fcNextInflow">₹0</strong>
+              </div>
+            </div>
+
+            <!-- Visual Daily Step Simulation Bars -->
+            <div class="forecast-bars-track" id="forecastBarsTrack">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <!-- Forecast Table -->
+          <div class="table-responsive">
+            <table class="cfo-table">
+              <thead>
+                <tr>
+                  <th>Forecast Date</th>
+                  <th>Expected Events / Scheduled Bills</th>
+                  <th>Confidence</th>
+                  <th class="text-right">Expected Inflow (₹)</th>
+                  <th class="text-right">Expected Outflow (₹)</th>
+                  <th class="text-right">Projected Closing Cash (₹)</th>
+                  <th class="text-center">Liquidity Risk</th>
+                </tr>
+              </thead>
+              <tbody id="forecastTableBody">
+                <!-- Dynamically populated daily steps -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           VIEW 4: BUDGET & VARIANCE ANALYSIS (ZERO-BASED & CATEGORY FP&A)
+           ==================================================================== -->
+      <section class="app-view" id="budget-view">
+        <div class="budget-top-summary">
+          <div class="card budget-kpi">
+            <span class="b-lbl">Planned Monthly Budget</span>
+            <strong class="b-val mono" id="budgetPlannedTotal">₹0</strong>
+            <span class="b-sub">Aligned with active expense categories</span>
+          </div>
+          <div class="card budget-kpi">
+            <span class="b-lbl">Actual Incurred Spend</span>
+            <strong class="b-val mono text-danger" id="budgetActualTotal">₹0</strong>
+            <span class="b-sub" id="budgetPctUsed">0% of budget utilized</span>
+          </div>
+          <div class="card budget-kpi">
+            <span class="b-lbl">Net Variance</span>
+            <strong class="b-val mono text-success" id="budgetNetVariance">₹0</strong>
+            <span class="b-sub">Controlled under-budget spend</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">Category Variance Analysis (FP&A Format)</h2>
+              <span class="card-subtitle">Favourable (F) vs Unfavourable (U) evaluation with early-warning thresholds</span>
+            </div>
+            <button class="btn btn-outline" id="btnConfigureBudgets">
+              <i class="fa-solid fa-sliders"></i> Adjust Budgets
+            </button>
+          </div>
+
+          <div class="table-responsive">
+            <table class="cfo-table">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Nature</th>
+                  <th class="text-right">Budget Limit (₹)</th>
+                  <th class="text-right">Actual Spend (₹)</th>
+                  <th class="text-right">Variance Amount (₹)</th>
+                  <th class="text-right">Variance %</th>
+                  <th class="text-center">Evaluation</th>
+                  <th>CFO Variance Assessment</th>
+                </tr>
+              </thead>
+              <tbody id="budgetVarianceTableBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           VIEW 5: UPCOMING OBLIGATIONS & LIABILITIES REGISTER
+           ==================================================================== -->
+      <section class="app-view" id="obligations-view">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">Master Recurring Obligations & Liabilities Register</h2>
+              <span class="card-subtitle">Scheduled EMIs, rents, post-dated transfers, insurance premiums, and subscriptions</span>
+            </div>
+            <button class="btn btn-primary" id="btnAddObligationModal">
+              <i class="fa-solid fa-plus"></i> Add New Obligation
+            </button>
+          </div>
+
+          <div class="table-responsive">
+            <table class="cfo-table">
+              <thead>
+                <tr>
+                  <th>Obligation Name</th>
+                  <th>Category</th>
+                  <th>Monthly Day</th>
+                  <th class="text-right">Amount (₹)</th>
+                  <th>Account to Debit</th>
+                  <th>Priority</th>
+                  <th class="text-center">Auto-Pay / NACH</th>
+                  <th class="text-center">Action</th>
+                </tr>
+              </thead>
+              <tbody id="masterObligationsTableBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           VIEW 6: 2026 WEALTH & SAVINGS PORTFOLIO
+           Directly elevating the Excel "2026 Saving" table into an asset portfolio
+           ==================================================================== -->
+      <section class="app-view" id="wealth-view">
+        <div class="wealth-grid">
+          <!-- Asset Allocations List -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h2 class="card-title">2026 Wealth Accumulation Portfolio</h2>
+                <span class="card-subtitle">Codified recurring deposits, life insurance, equities, and liquid reserves</span>
+              </div>
+              <button class="btn btn-outline" id="btnAddWealthAsset">
+                <i class="fa-solid fa-plus"></i> Add Investment Asset
+              </button>
+            </div>
+            <div class="wealth-cards-list" id="wealthCardsList">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- Net Worth Balance Sheet Summary -->
+          <div class="card networth-card">
+            <div class="card-header">
+              <h3 class="card-title"><i class="fa-solid fa-building text-accent"></i> Balance Sheet Net Worth</h3>
+            </div>
+            <div class="networth-body">
+              <div class="networth-hero-num">
+                <span class="nw-lbl">Estimated Household Net Worth</span>
+                <span class="nw-val mono" id="heroNetWorth">₹0</span>
+                <span class="nw-date">As of Today (Reconciled)</span>
+              </div>
+
+              <div class="nw-breakdown-list">
+                <div class="nw-row">
+                  <span class="nw-item-lbl"><i class="fa-solid fa-circle-dot text-success"></i> Liquid Bank & Cash:</span>
+                  <strong class="mono" id="nwLiquidVal">₹0</strong>
+                </div>
+                <div class="nw-row">
+                  <span class="nw-item-lbl"><i class="fa-solid fa-circle-dot text-cyan"></i> RD Accumulated Value:</span>
+                  <strong class="mono" id="nwRDVal">₹0</strong>
+                </div>
+                <div class="nw-row">
+                  <span class="nw-item-lbl"><i class="fa-solid fa-circle-dot text-primary"></i> Share Market / SIPs:</span>
+                  <strong class="mono" id="nwStockVal">₹0</strong>
+                </div>
+                <div class="nw-row">
+                  <span class="nw-item-lbl"><i class="fa-solid fa-circle-dot text-indigo"></i> LIC & Insurance Surrender:</span>
+                  <strong class="mono" id="nwLicVal">₹0</strong>
+                </div>
+                <div class="nw-row border-top">
+                  <span class="nw-item-lbl text-danger"><i class="fa-solid fa-circle-minus"></i> Outstanding Liabilities:</span>
+                  <strong class="mono text-danger" id="nwLiabilitiesVal">₹0</strong>
+                </div>
+              </div>
+
+              <div class="cfo-wealth-rule">
+                <i class="fa-solid fa-lightbulb text-warning"></i>
+                <p><strong>CFO Wealth Rule:</strong> Systematic monthly investment across risk-free deposits and equities compounds long-term wealth while hedging inflation.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           VIEW 7: ACCOUNTING STATEMENTS (P&L, CASH FLOW, BALANCE SHEET)
+           ==================================================================== -->
+      <section class="app-view" id="statements-view">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">Certified Financial Statements</h2>
+              <span class="card-subtitle">Audited financial statements generated directly from underlying transactions</span>
+            </div>
+            <div class="statement-tabs">
+              <button class="btn-toggle active" data-statement="pl" id="tabStmtPL">Income & Expenditure (P&L)</button>
+              <button class="btn-toggle" data-statement="cf" id="tabStmtCF">Cash Flow Statement</button>
+              <button class="btn-toggle" data-statement="bs" id="tabStmtBS">Balance Sheet</button>
+            </div>
+          </div>
+
+          <!-- Statement Container -->
+          <div class="statement-sheet" id="statementSheetContainer">
+            <!-- Dynamically populated statement -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           VIEW 8: RISK & RUNWAY DIAGNOSTICS
+           ==================================================================== -->
+      <section class="app-view" id="risk-view">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title"><i class="fa-solid fa-shield-virus text-danger"></i> Household Financial Risk & Sensitivity Analysis</h2>
+              <span class="card-subtitle">Stress testing income interruption, emergency buffer depletion, and debt ratio</span>
+            </div>
+          </div>
+
+          <div class="risk-matrix-grid">
+            <!-- Metric 1: FOIR / Fixed Obligation to Income Ratio -->
+            <div class="risk-card">
+              <div class="risk-card-head">
+                <span class="risk-title">Fixed Obligations to Income (FOIR)</span>
+                <span class="risk-badge status-good" id="riskFoirBadge">40.7% (Safe)</span>
+              </div>
+              <p class="risk-desc">Percentage of your monthly income tied down in unavoidable EMIs, rent, and subscriptions. Standard banking threshold: below 50%.</p>
+              <div class="risk-bar-track">
+                <div class="risk-bar-fill bg-amber" id="riskFoirBar" style="width: 40.7%;"></div>
+              </div>
+              <div class="risk-meta">
+                <span id="riskFoirCurrent">Current: ₹0</span>
+                <span id="riskFoirLimit">Max Safe Limit: ₹0 (50%)</span>
+              </div>
+            </div>
+
+            <!-- Metric 2: Liquidity Buffer Days -->
+            <div class="risk-card">
+              <div class="risk-card-head">
+                <span class="risk-title">Liquidity Buffer Days</span>
+                <span class="risk-badge status-good" id="riskBufferBadge">64 Days</span>
+              </div>
+              <p class="risk-desc">Number of days your liquid bank accounts and cash can cover full household living expenses without any fresh income.</p>
+              <div class="risk-bar-track">
+                <div class="risk-bar-fill bg-emerald" id="riskBufferBar" style="width: 70%;"></div>
+              </div>
+              <div class="risk-meta">
+                <span>Healthy Target: 60 - 90 Days</span>
+                <span id="riskBufferMetaCurrent">Current: 0 Days</span>
+              </div>
+            </div>
+
+            <!-- Metric 3: Debt-to-Savings Acceleration -->
+            <div class="risk-card">
+              <div class="risk-card-head">
+                <span class="risk-title">Savings to Debt Service Ratio</span>
+                <span class="risk-badge status-good" id="riskSavingsDebtBadge">1.00x (Setup)</span>
+              </div>
+              <p class="risk-desc">Ratio of monthly wealth allocations (RD + Shares + Savings) compared to debt repayments. Values above 1.0x build long-term equity.</p>
+              <div class="risk-bar-track">
+                <div class="risk-bar-fill bg-cyan" id="riskSavingsDebtBar" style="width: 0%;"></div>
+              </div>
+              <div class="risk-meta">
+                <span id="riskSavingsDebtMetaSavings">Monthly Savings: ₹0</span>
+                <span id="riskSavingsDebtMetaEmi">Debt EMI: ₹0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ====================================================================
+       MODAL 1: RECORD / EDIT TRANSACTION (CFO GRADE)
+       Strict classification: Expense, Income, Transfer, Settlement, Investment
+       ==================================================================== -->
+  <div class="modal-overlay hidden" id="transactionModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title" id="transactionModalTitle">Record Transaction</h3>
+        <button class="modal-close-btn" id="btnTxClose" aria-label="Close modal">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="transactionForm">
+        <input type="hidden" id="txEditId" value="">
+
+        <!-- Transaction Type Selector Buttons -->
+        <div class="tx-type-selector">
+          <label class="tx-type-btn active" data-type="EXPENSE">
+            <input type="radio" name="txType" value="EXPENSE" checked>
+            <i class="fa-solid fa-arrow-up"></i> Expense
+          </label>
+          <label class="tx-type-btn" data-type="INCOME">
+            <input type="radio" name="txType" value="INCOME">
+            <i class="fa-solid fa-arrow-down"></i> Income
+          </label>
+          <label class="tx-type-btn" data-type="TRANSFER">
+            <input type="radio" name="txType" value="TRANSFER">
+            <i class="fa-solid fa-right-left"></i> Transfer
+          </label>
+          <label class="tx-type-btn" data-type="LIABILITY_SETTLEMENT">
+            <input type="radio" name="txType" value="LIABILITY_SETTLEMENT">
+            <i class="fa-solid fa-credit-card"></i> Card Settlement
+          </label>
+          <label class="tx-type-btn" data-type="SAVINGS_ALLOCATION">
+            <input type="radio" name="txType" value="SAVINGS_ALLOCATION">
+            <i class="fa-solid fa-piggy-bank"></i> Investment / RD
+          </label>
+        </div>
+
+        <div class="form-grid">
+          <!-- Amount -->
+          <div class="form-group col-span-2">
+            <label for="txAmount">Transaction Amount (₹) *</label>
+            <div class="input-prefix-wrapper">
+              <span class="input-prefix">₹</span>
+              <input type="number" id="txAmount" placeholder="0" min="0.01" step="any" required autofocus>
+            </div>
+            <span class="form-help" id="txAmountHint">Enter the exact debited or credited Rupee value.</span>
+          </div>
+
+          <!-- Description -->
+          <div class="form-group col-span-2">
+            <label for="txDesc">Description / Payee *</label>
+            <input type="text" id="txDesc" placeholder="e.g. Home EMI, Tiffin Payment, Transfer to SBI, RD 5K" required autocomplete="off">
+          </div>
+
+          <!-- Category (Dynamically adjusted based on type) -->
+          <div class="form-group" id="groupCategory">
+            <label for="txCategory">Category *</label>
+            <select id="txCategory" required>
+              <option value="EMI & Rent">🏠 EMI & Rent</option>
+              <option value="Food & Living">🍱 Food & Living</option>
+              <option value="Savings & RD">📈 Savings & RD</option>
+              <option value="Credit Card">💳 Credit Card</option>
+              <option value="Transfers">🤝 Personal Transfers</option>
+              <option value="Investments">📊 Investments & Shares</option>
+              <option value="Vehicles">🏍️ Vehicles & Fuel</option>
+              <option value="Bills & Utilities">⚡ Bills & Utilities</option>
+              <option value="Salary & Wages">💰 Salary & Wages</option>
+              <option value="Miscellaneous" selected>💸 Miscellaneous</option>
+            </select>
+          </div>
+
+          <!-- Nature (Essential vs Discretionary) -->
+          <div class="form-group" id="groupNature">
+            <label for="txNature">Classification (CFO)</label>
+            <select id="txNature">
+              <option value="ESSENTIAL" selected>Essential (Needs/Fixed)</option>
+              <option value="DISCRETIONARY">Discretionary (Wants/Flexible)</option>
+            </select>
+          </div>
+
+          <!-- Source Account -->
+          <div class="form-group">
+            <label for="txSourceAccount">Source Account *</label>
+            <select id="txSourceAccount" required>
+              <option value="Primary Bank" selected>Primary Salary Account</option>
+              <option value="SBI Account">SBI Reserve Account</option>
+              <option value="Cash">Cash in Hand</option>
+              <option value="Credit Card">Credit Card</option>
+            </select>
+          </div>
+
+          <!-- Destination Account (Only shown for transfers) -->
+          <div class="form-group hidden" id="groupDestAccount">
+            <label for="txDestAccount">Destination Account *</label>
+            <select id="txDestAccount">
+              <option value="SBI Account" selected>SBI Reserve Account</option>
+              <option value="Primary Bank">Primary Salary Account</option>
+              <option value="Cash">Cash in Hand</option>
+              <option value="Credit Card">Credit Card</option>
+            </select>
+          </div>
+
+          <!-- Date -->
+          <div class="form-group">
+            <label for="txDate">Transaction Date *</label>
+            <input type="date" id="txDate" required>
+          </div>
+
+          <!-- Payment Mode -->
+          <div class="form-group">
+            <label for="txMode">Payment Instrument</label>
+            <select id="txMode">
+              <option value="Auto-Debit" selected>Auto-Debit / NACH</option>
+              <option value="UPI">UPI (GPay / PhonePe / Paytm)</option>
+              <option value="Netbanking">Netbanking / IMPS / NEFT</option>
+              <option value="Credit Card">Credit Card Swipe</option>
+              <option value="Cash">Cash Currency</option>
+            </select>
+          </div>
+
+          <!-- Remark / Notes -->
+          <div class="form-group col-span-2">
+            <label for="txRemark">Remark & Audit Notes</label>
+            <input type="text" id="txRemark" placeholder="e.g. Paid installment 3/60, reference #TXN12345">
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" id="btnTxCancel">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btnTxSubmit">
+            <i class="fa-solid fa-check"></i> Commit Transaction
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       MODAL 2: MANAGE ACCOUNTS & VERIFIED BALANCES
+       ==================================================================== -->
+  <div class="modal-overlay hidden" id="accountsModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">Reconcile Verified Account Balances</h3>
+        <button class="modal-close-btn" id="btnAccClose"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body" style="padding: 20px 24px;">
+        <p class="text-muted" style="margin-bottom: 16px; font-size: 0.85rem;">
+          Update your confirmed bank passbook balances. The system will record the verification timestamp for CFO auditability.
+        </p>
+        <div class="accounts-edit-list" id="accountsEditList">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" id="btnAccCancel">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       MODAL 3: CONFIGURE CATEGORY BUDGETS (FP&A)
+       ==================================================================== -->
+  <div class="modal-overlay hidden" id="budgetModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">Configure Category Budgets & Targets</h3>
+        <button class="modal-close-btn" id="btnBudgetClose"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body" style="padding: 20px 24px; max-height: 70vh; overflow-y: auto;">
+        <p class="text-muted" style="margin-bottom: 16px; font-size: 0.85rem;">
+          Set monthly spending limits for each category to maintain your targeted savings rate and operating surplus.
+        </p>
+        <div class="budget-edit-list" id="budgetEditList">
+          <!-- Dynamically rendered -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" id="btnBudgetCancel">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       MODAL 4: ADD / EDIT RECURRING OBLIGATION & EMI
+       ==================================================================== -->
+  <div class="modal-overlay hidden" id="obligationModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title" id="obligationModalTitle">Add Scheduled Obligation</h3>
+        <button class="modal-close-btn" id="btnObligationClose"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="obligationForm">
+        <div class="form-grid">
+          <div class="form-group col-span-2">
+            <label for="obName">Obligation Name *</label>
+            <input type="text" id="obName" placeholder="e.g. Car EMI, Internet Broadband, Child School Fee" required autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label for="obAmount">Monthly Commitment (₹) *</label>
+            <div class="input-prefix-wrapper">
+              <span class="input-prefix">₹</span>
+              <input type="number" id="obAmount" placeholder="0" min="1" step="any" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="obDay">Day of Month (1 - 31) *</label>
+            <input type="number" id="obDay" placeholder="e.g. 5" min="1" max="31" required>
+          </div>
+          <div class="form-group">
+            <label for="obCategory">Category *</label>
+            <select id="obCategory" required>
+              <option value="EMI & Rent">🏠 EMI & Rent</option>
+              <option value="Food & Living">🍱 Food & Living</option>
+              <option value="Savings & RD">📈 Savings & RD</option>
+              <option value="Credit Card">💳 Credit Card</option>
+              <option value="Transfers">🤝 Personal Transfers</option>
+              <option value="Investments">📊 Investments</option>
+              <option value="Vehicles">🏍️ Vehicles</option>
+              <option value="Bills & Utilities" selected>⚡ Bills & Utilities</option>
+              <option value="Miscellaneous">💸 Miscellaneous</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="obAccount">Debit From Account *</label>
+            <select id="obAccount" required>
+              <option value="Primary Bank" selected>Primary Salary Account</option>
+              <option value="SBI Account">SBI Reserve Account</option>
+              <option value="Cash">Cash in Hand</option>
+              <option value="Credit Card">Credit Card</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="obPriority">Priority *</label>
+            <select id="obPriority">
+              <option value="MANDATORY" selected>Mandatory (Statutory/Loan)</option>
+              <option value="ESSENTIAL">Essential (Household/Living)</option>
+              <option value="WEALTH">Wealth Goal (RD/SIP)</option>
+              <option value="VARIABLE">Variable (Discretionary)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="obAutoDebit">Auto-Debit / NACH</label>
+            <select id="obAutoDebit">
+              <option value="true" selected>Yes (Auto-Debit Mandate)</option>
+              <option value="false">No (Manual Payment)</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" id="btnObligationCancel">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-check"></i> Save Obligation</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       MODAL 5: ADD WEALTH & INVESTMENT ASSET
+       ==================================================================== -->
+  <div class="modal-overlay hidden" id="wealthModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">Add Wealth & Investment Asset</h3>
+        <button class="modal-close-btn" id="btnWealthClose"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="wealthForm">
+        <div class="form-grid">
+          <div class="form-group col-span-2">
+            <label for="waName">Asset / Fund Name *</label>
+            <input type="text" id="waName" placeholder="e.g. PPF Account, Parag Parikh Flexi Cap, Sovereign Gold Bond" required autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label for="waCategory">Asset Class *</label>
+            <select id="waCategory" required>
+              <option value="Guaranteed Fixed Deposit" selected>Guaranteed Fixed Deposit / RD</option>
+              <option value="Equity & Growth">Equity & Mutual Funds</option>
+              <option value="Government Scheme">Govt Scheme (PPF / NPS / Sukanya)</option>
+              <option value="Insurance & Protection">Life / Health Insurance</option>
+              <option value="Gold & Precious Metals">Gold / SGB / Silver</option>
+              <option value="Liquid Cash / Bank">Liquid Treasury Buffer</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="waReturnRate">Expected Return / Yield</label>
+            <input type="text" id="waReturnRate" placeholder="e.g. 7.1% p.a. or 12% Hist." required>
+          </div>
+          <div class="form-group">
+            <label for="waMonthlyAlloc">Monthly Allocation (₹) *</label>
+            <div class="input-prefix-wrapper">
+              <span class="input-prefix">₹</span>
+              <input type="number" id="waMonthlyAlloc" placeholder="0" min="0" step="any" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="waAccumulated">Current Accumulated Value (₹) *</label>
+            <div class="input-prefix-wrapper">
+              <span class="input-prefix">₹</span>
+              <input type="number" id="waAccumulated" placeholder="0" min="0" step="any" required>
+            </div>
+          </div>
+          <div class="form-group col-span-2">
+            <label for="waTarget">Target / Maturity Goal (₹) *</label>
+            <div class="input-prefix-wrapper">
+              <span class="input-prefix">₹</span>
+              <input type="number" id="waTarget" placeholder="e.g. 500000" min="1" step="any" required>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" id="btnWealthCancel">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-check"></i> Add Asset</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="js/app.js"></script>
+</body>
+</html>

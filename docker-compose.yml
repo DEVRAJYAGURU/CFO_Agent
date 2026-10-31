@@ -1,0 +1,12 @@
+services:
+  dexpense-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: dexpense:latest
+    container_name: dexpense_app
+    restart: unless-stopped
+    ports:
+      - "5050:80"     # Host 5050 -> Container 80
+    environment:
+      - TZ=UTC
